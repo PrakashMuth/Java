@@ -1,9 +1,6 @@
 package chapter2;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,6 +19,11 @@ public class StreamApi
                 new Dish("prawns", false, 400, Dish.Type.FISH),
                 new Dish("salmon", false, 450, Dish.Type.FISH)
         );
+        //convert int to double
+        OptionalLong cal=menu.stream()
+                .mapToLong(Dish::getCalories)
+                .min();
+        System.out.println("calories" + cal);
         //stream by name
         List<String> highCalloriesName=menu.stream()
                 .filter(dish -> dish.getCalories() > 400)
@@ -73,5 +75,15 @@ public class StreamApi
                .map(String::length)
                .collect(Collectors.toList());
        System.out.println(wordlength);
+
+       //grouping by
+        Map<Dish.Type,List<Dish>> tempdish=menu
+                .stream()
+                .collect(Collectors.groupingBy(d -> {
+                    if(d.getCalories() > 900) return Dish.Type.FISH;
+                    else if (d.isVegetarian()) return Dish.Type.OTHER;
+                    else return Dish.Type.MEAT;
+                }));
+        System.out.println("tempdish" + tempdish + "tempdish");
     }
 }
